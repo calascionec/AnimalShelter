@@ -48,6 +48,36 @@
         {
             $GLOBALS['DB']->exec("DELETE FROM animal_types");
         }
+
+        static function find($search_id)
+        {
+            $found_animal_type = null;
+            $animal_types = AnimalType::getAll();
+            foreach($animal_types as $animal_type) {
+                $animal_type_id = $animal_type->getId();
+                if($animal_type_id == $search_id) {
+                    $found_animal_type = $animal_type;
+                }
+            }
+            return $found_animal_type;
+        }
+
+        function getAnimals()
+        {
+            $animals = array();
+            $returned_animals = $GLOBALS['DB']->query("SELECT * FROM animals WHERE animal_type_id = {$this->getId()};");
+            foreach($returned_animals as $animal) {
+                $name = $animal['name'];
+                $gender = $animal['gender'];
+                $breed = $animal['breed'];
+                $date_of_admittance = $animal['date_of_admittance'];
+                $animal_type_id = $animal['animal_type_id'];
+                $id = $animal['id'];
+                $new_animal = new Animal($name, $gender, $breed, $date_of_admittance, $animal_type_id, $id);
+                array_push($animals, $new_animal);
+            }
+            return $animals;
+        }
     }
 
 
